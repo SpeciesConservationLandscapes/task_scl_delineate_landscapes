@@ -60,7 +60,7 @@ class SCLLandscapes(SCLTask):
         core_restoration_Filter = ee.Filter.And(
             ee.Filter.lessThanOrEquals('min_patch_area', None, 'patch_area', None),
             # ee.Filter.lessThanOrEquals({'rightField': 'patch_area', 'leftField': 'min_patch_area'}),
-            ee.Filter.eq('prob', 1),
+            ee.Filter.eq('prob', 2),
             ee.Filter.eq('hii', 3)
         )
 
@@ -85,6 +85,13 @@ class SCLLandscapes(SCLTask):
         def feature_buffer(ft):
             return ft.buffer(2000)
 
+        def feature_buffer_small(ft):
+            return ft.buffer(100)
+
+        core_survey = core_survey.map(feature_buffer_small).union()
+
+        core_restoration = core_restoration.map(feature_buffer_small).union()
+        
         stepping_stones_con = stepping_stones.map(feature_buffer)
 
         fragments_con = fragments.map(feature_buffer)
@@ -104,11 +111,16 @@ class SCLLandscapes(SCLTask):
 
         scl_restoration_path = f"{self.ee_pocdir}/scl_restoration"
 
-        # scl_fragment_path = "{self.ee_pocdir}/scl_fragment"
+        # scl_fragment_path = f"{self.ee_pocdir}/scl_fragment"
+
         # print(scl_species_path)
-        self.export_fc_ee(scl_species, scl_species_path)
-        self.export_fc_ee(core_survey, scl_survey_path)
-        self.export_fc_ee(core_restoration, scl_restoration_path)
+        if scl_species.size().getInfo() > 0:
+            self.export_fc_ee(scl_species, scl_species_path)
+        if core_survey.size().getInfo() > 0:
+            self.export_fc_ee(core_survey, scl_survey_path)
+        if core_restoration.size().getInfo() > 0:
+            self.export_fc_ee(core_restoration, scl_restoration_path)
+        # if core_restoration.size().getInfo() > 0:
         # self.export_fc_ee(, scl_fragment_path)
 
     def check_inputs(self):
