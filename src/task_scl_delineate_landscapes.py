@@ -16,7 +16,7 @@ class SCLLandscapes(SCLTask):
         "countries": {
             "ee_type": SCLTask.FEATURECOLLECTION,
             "ee_path": "USDOS/LSIB/2013",
-            "maxage": 10,
+            "maxage": 10
         }
     }
 
@@ -91,7 +91,7 @@ class SCLLandscapes(SCLTask):
         core_survey = core_survey.map(feature_buffer_small).union()
 
         core_restoration = core_restoration.map(feature_buffer_small).union()
-        
+
         stepping_stones_con = stepping_stones.map(feature_buffer)
 
         fragments_con = fragments.map(feature_buffer)
@@ -118,8 +118,8 @@ class SCLLandscapes(SCLTask):
             self.export_fc_ee(scl_species, scl_species_path)
         if core_survey.size().getInfo() > 0:
             self.export_fc_ee(core_survey, scl_survey_path)
-        if core_restoration.size().getInfo() > 0:
-            self.export_fc_ee(core_restoration, scl_restoration_path)
+        # if core_restoration.size().getInfo() > 0:
+        #     self.export_fc_ee(core_restoration, scl_restoration_path)
         # if core_restoration.size().getInfo() > 0:
         # self.export_fc_ee(, scl_fragment_path)
 
